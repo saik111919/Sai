@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { routes } from "./Routes";
+import Protect from "./Components/Protected";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Routes>
+          {routes.map((route) =>
+            route.protected ? (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={
+                  <Protect
+                    CMP={route.component}
+                    isadmin={route.is_admin}
+                    protected={route.protected}
+                  />
+                }
+              />
+            ) : (
+              <Route path={route.path} element={<route.component />} />
+            )
+          )}
+        </Routes>
+      </Router>
+    </>
   );
 }
 
